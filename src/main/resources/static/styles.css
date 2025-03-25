@@ -1,0 +1,161 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f8f8f8;
+    text-align: center;
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+    
+}
+
+
+
+.hero {
+    height: 60vh;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 22px;
+}
+.logo span {
+    color: rgb(236, 96, 9);
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    position: relative;
+}
+
+.hero .text {
+    text-align: left;
+    max-width: 400px;
+}
+
+.hero h1 {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.hero h1 span {
+    color: red;
+}
+
+.hero button {
+    background: #1f1f2e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.image img {
+    width: 600px;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background: white;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    width: 70%;
+    border-radius: 30px;
+}
+
+select, .search-btn {
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.search-btn {
+    background: #ffffff;
+    color: white;
+    transition: cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.search-btn:hover {
+    color: white;
+}
+
+.search-btn:active {
+    background: #1f1f2e;
+    color: white;
+}
+
+.search-btn:focus {
+    background: #1f1f2e;
+    color: white;
+}
+
+.search-btn:disabled {
+    background: #1f1f2e;
+    color: white;
+    background: white;
+}
+
+.brands h2 {
+    margin: 30px 0;
+    font-size: 22px;
+}
+
+.brand-logos {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    opacity: 0.6;
+}
+
+.brand-logos img {
+    width: 100px;
+}
+.hero-carandorder{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.hero-carandorder span{
+    font-size: 80px;
+    font-weight: bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: rgb(148, 8, 8);
+    
+}
+.hero-carandorder button{
+    background: #1f1f2e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 20px;
+}
+.hero-carandorder button:hover{
+    background: #3a3a4a;
+}
+
+.theul{
+    list-style: none;
+}
+
+
