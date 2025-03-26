@@ -6,6 +6,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class S3Service {
                             .build(),
                     RequestBody.fromBytes(fileData));
     
-       
+        // Construct S3 URL
             String imageUrl = "https://" + BUCKET_NAME + ".s3." + AWS_REGION + ".amazonaws.com/" + fileName;
             return imageUrl; 
         } catch (S3Exception e) {
