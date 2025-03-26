@@ -29,12 +29,6 @@ jobs:
         aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
         aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
         aws-region: eu-central-1
-
-    - name: Force Maven to clean and redownload dependencies
-      run: |
-        mvn clean
-        mvn dependency:purge-local-repository
-        mvn install -U -DskipTests
         
     - name: Login to Amazon ECR
       id: login-ecr
@@ -69,7 +63,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1  # Matches the ECR region in carsRDS.yaml
+          aws-region: eu-central-1 
 
       # Get current ECS task definition and update container image
       - name: Register new task definition
