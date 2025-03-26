@@ -40,7 +40,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: 412381768295.dkr.ecr.eu-central-1.amazonaws.com
-        ECR_REPOSITORY: carsrds
+        ECR_REPOSITORY: cars
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
