@@ -61,26 +61,26 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- AWS SDK v1 for S3 -->
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.12.565</version>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.31.7</version>
+			<scope>compile</scope>
 		</dependency>
 
-		<!-- AWS SDK v1 for Secrets Manager -->
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-secretsmanager</artifactId>
-			<version>1.12.565</version>
-		</dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>awssdk-core</artifactId>
+			<version>2.20.40</version>
+    	</dependency>
 
-		<!-- AWS SDK v1 for Systems Manager (SSM Parameter Store) -->
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-ssm</artifactId>
-			<version>1.12.565</version>
-		</dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>bom</artifactId>
+			<version>2.20.40</version>
+			<type>pom</type>
+			<scope>import</scope>
+    </dependency>
 
 	</dependencies>
 
