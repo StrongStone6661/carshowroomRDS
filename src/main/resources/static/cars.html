@@ -220,9 +220,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        let currentPage = 1;
+        /* let currentPage = 1;
         let continuationToken = null;
-        const itemsPerPage = 12;
+        const itemsPerPage = 12; */
 
         function showLoader() {
             document.getElementById('loader').style.display = 'flex';
@@ -251,38 +251,48 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadGallery();
         });
+/* --------------------------Load Images------------------------------------- */
+        let currentPage = 0;
+        const itemsPerPage = 12;
 
-        async function loadGallery(page = 1) {
-            showLoader();
-            try {
-                const response = await axios.get('/api/images', {
-                    params: {
-                        maxKeys: itemsPerPage,
-                        continuationToken: page === 1 ? null : continuationToken
-                    }
-                });
-                
-                const gallery = document.getElementById('gallery');
-                gallery.innerHTML = '';
+    async function loadGallery(page = 0) {
+        showLoader();
+        try {
+            const response = await axios.get('/api/images', {
+                params: { page, size: itemsPerPage }
+            });
 
-                if (!response.data.fileUrls || response.data.fileUrls.length === 0) {
-                    gallery.innerHTML = '<div class="empty-gallery"><p>Your gallery is empty. Upload some images to get started!</p></div>';
-                    document.getElementById('prevBtn').disabled = true;
-                    document.getElementById('nextBtn').disabled = true;
-                } else {
-                    response.data.fileUrls.forEach(url => addImageToGallery(url));
-                    continuationToken = response.data.nextContinuationToken;
-                    
-                    // Update pagination buttons
-                    document.getElementById('prevBtn').disabled = page === 1;
-                    document.getElementById('nextBtn').disabled = !continuationToken;
-                }
-            } catch (error) {
-                console.error('Failed to fetch images:', error);
-            } finally {
-                hideLoader();
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            if (!response.data.content || response.data.content.length === 0) {
+                gallery.innerHTML = '<div class="empty-gallery"><p>Your gallery is empty. Upload some images to get started!</p></div>';
+            } else {
+                response.data.content.forEach(image => addImageToGallery(image.imageUrl, image.description));
+
+                // Enable or disable pagination buttons
+                document.getElementById('prevBtn').disabled = response.data.first;
+                document.getElementById('nextBtn').disabled = response.data.last;
             }
+        } catch (error) {
+            console.error('Failed to fetch images:', error);
+        } finally {
+            hideLoader();
         }
+    }
+
+// Pagination Controls
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                loadGallery(currentPage);
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentPage++;
+            loadGallery(currentPage);
+        });
 
         // Add event listeners for pagination buttons
         document.getElementById('prevBtn').addEventListener('click', () => {

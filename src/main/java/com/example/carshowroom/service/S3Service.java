@@ -34,8 +34,10 @@ public class S3Service {
                             .key(fileName)
                             .build(),
                     RequestBody.fromBytes(fileData));
-
-            return "File uploaded successfully: " + fileName;
+    
+       
+            String imageUrl = "https://" + BUCKET_NAME + ".s3." + AWS_REGION + ".amazonaws.com/" + fileName;
+            return imageUrl; 
         } catch (S3Exception e) {
             throw new RuntimeException("Failed to upload file: " + e.getMessage());
         }
