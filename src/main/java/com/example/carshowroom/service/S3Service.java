@@ -101,7 +101,12 @@ public class S3Service {
      */
     public boolean deleteFile(String fileName) {
         try {
-            s3Client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, fileName));
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                    .bucket(BUCKET_NAME)
+                    .key(fileName)
+                    .build();
+
+            s3Client.deleteObject(request);
             return true;
         } catch (Exception e) {
             return false;
