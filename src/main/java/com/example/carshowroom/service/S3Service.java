@@ -1,10 +1,10 @@
 package com.example.carshowroom.service;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.*;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
 
 import org.springframework.stereotype.Service;
 
@@ -14,34 +14,29 @@ import java.util.stream.Collectors;
 @Service
 public class S3Service {
 
-    private final AmazonS3 s3Client;
+    private final S3Client s3Client;
     private static final String BUCKET_NAME = "carsshowroom";
     private static final String AWS_REGION = "eu-central-1";
 
     public S3Service() {
         // Load credentials from environment variables or IAM Role
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(
-                System.getenv("AWS_ACCESS_KEY_ID"),
-                System.getenv("AWS_SECRET_ACCESS_KEY")
-        );
-
-        this.s3Client = AmazonS3ClientBuilder.standard()
-                .withRegion(AWS_REGION)
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+        this.s3Client = S3Client.builder()
+                .region(Region.of(AWS_REGION))
+                .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
                 .build();
     }
 
     /*
-     * method to upload file to S3 bucket
+     * Method to upload file to S3 bucket
      */
     public String uploadFile(String fileName, byte[] fileData) {
         try {
-            // Convert byte[] to InputStream
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(fileData.length);
-
-            s3Client.putObject(new PutObjectRequest(BUCKET_NAME, fileName, 
-                new java.io.ByteArrayInputStream(fileData), metadata));
+            // Upload the file to S3
+            s3Client.putObject(PutObjectRequest.builder()
+                    .bucket(BUCKET_NAME)
+                    .key(fileName)
+                    .build(),
+                    RequestBody.fromBytes(fileData));
 
             // Construct S3 URL
             return "https://" + BUCKET_NAME + ".s3." + AWS_REGION + ".amazonaws.com/" + fileName;
@@ -51,25 +46,25 @@ public class S3Service {
     }
 
     /*
-     * method to list files in S3 bucket
+     * Method to list files in S3 bucket
      */
     public S3ListResponse listFiles(Integer maxKeys, String continuationToken) {
         try {
-            ListObjectsV2Request request = new ListObjectsV2Request()
-                    .withBucketName(BUCKET_NAME)
-                    .withMaxKeys(maxKeys);
+            ListObjectsV2Request.Builder requestBuilder = ListObjectsV2Request.builder()
+                    .bucket(BUCKET_NAME)
+                    .maxKeys(maxKeys);
 
             if (continuationToken != null && !continuationToken.isEmpty()) {
-                request.setContinuationToken(continuationToken);
+                requestBuilder.continuationToken(continuationToken);
             }
 
-            ListObjectsV2Result response = s3Client.listObjectsV2(request);
+            ListObjectsV2Response response = s3Client.listObjectsV2(requestBuilder.build());
 
-            List<String> fileUrls = response.getObjectSummaries().stream()
-                    .map(s3Object -> "https://" + BUCKET_NAME + ".s3." + AWS_REGION + ".amazonaws.com/" + s3Object.getKey())
+            List<String> fileUrls = response.contents().stream()
+                    .map(s3Object -> "https://" + BUCKET_NAME + ".s3." + AWS_REGION + ".amazonaws.com/" + s3Object.key())
                     .collect(Collectors.toList());
 
-            return new S3ListResponse(fileUrls, response.getNextContinuationToken());
+            return new S3ListResponse(fileUrls, response.nextContinuationToken());
         } catch (Exception e) {
             throw new RuntimeException("Failed to list files: " + e.getMessage());
         }
@@ -97,16 +92,14 @@ public class S3Service {
     }
 
     /*
-     * method to delete file from s3 bucket
+     * Method to delete file from S3 bucket
      */
     public boolean deleteFile(String fileName) {
         try {
-            DeleteObjectRequest request = DeleteObjectRequest.builder()
+            s3Client.deleteObject(DeleteObjectRequest.builder()
                     .bucket(BUCKET_NAME)
                     .key(fileName)
-                    .build();
-
-            s3Client.deleteObject(request);
+                    .build());
             return true;
         } catch (Exception e) {
             return false;
